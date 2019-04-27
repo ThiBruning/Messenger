@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "817229475077",
+    "firebase_url": "https://messenger-1b774.firebaseio.com",
+    "project_id": "messenger-1b774",
+    "storage_bucket": "messenger-1b774.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817229475077:android:acf798d7aff7e273",
+        "android_client_info": {
+          "package_name": "com.ifpr.thiago.messenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817229475077-k4u2dm5f72unt9bdp27ro5kjmdi4khkt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA92ABg2cJYxOD14JRGmn4UhXGDCMEfw_M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
