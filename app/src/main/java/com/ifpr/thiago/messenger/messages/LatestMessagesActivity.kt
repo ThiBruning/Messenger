@@ -7,13 +7,19 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.ifpr.thiago.messenger.R
+import com.ifpr.thiago.messenger.models.Message
 import com.ifpr.thiago.messenger.models.User
 import com.ifpr.thiago.messenger.registration.RegisterActivity
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Item
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_latest_messages.*
+import kotlinx.android.synthetic.main.latest_message_item.view.*
+
+val adapter = GroupAdapter<ViewHolder>()
+val latestMessagesMap = HashMap<String, Message>()
 
 class LatestMessagesActivity : AppCompatActivity() {
 
@@ -25,10 +31,14 @@ class LatestMessagesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
 
+        recycler_latest_messages.adapter = adapter
+
         // captura o usuario que esta logado
         getCurrentUser()
         // Verifica se o usuário está logado
         verifyUserLogged()
+        // Lista as ultimas mensagens
+        listLatestMessages()
     }
 
     private fun getCurrentUser() {
@@ -53,6 +63,43 @@ class LatestMessagesActivity : AppCompatActivity() {
         }
     }
 
+    private fun listLatestMessages() {
+
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/latest_messages/$fromId")
+        ref.addChildEventListener(object : ChildEventListener{
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val message = p0.getValue(Message::class.java) ?: return
+                latestMessagesMap[p0.key!!] = message
+                refresh()
+            }
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                val message = p0.getValue(Message::class.java) ?: return
+                latestMessagesMap[p0.key!!] = message
+                refresh()
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            override fun onChildRemoved(p0: DataSnapshot) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+    }
+
+    private fun refresh() {
+        adapter.clear()
+        latestMessagesMap.values.forEach {
+            adapter.add(LatestMessageItem(it))
+        }
+    }
+
     // criando a navbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu, menu)
@@ -73,5 +120,15 @@ class LatestMessagesActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+}
+
+class LatestMessageItem(val message: Message): Item<ViewHolder>() {
+    override fun getLayout(): Int {
+        return R.layout.latest_message_item
+    }
+
+    override fun bind(viewHolder: ViewHolder, position: Int) {
+        viewHolder.itemView.message_latest_message.text = message.text
     }
 }

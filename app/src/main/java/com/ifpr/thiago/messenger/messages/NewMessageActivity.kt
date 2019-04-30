@@ -20,16 +20,16 @@ import kotlinx.android.synthetic.main.user_row.view.*
 
 class NewMessageActivity : AppCompatActivity() {
 
+    companion object {
+        val USER_KEY = "USER_KEY"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
 
         supportActionBar?.title = "Select the user"
         listUsers()
-    }
-
-    companion object {
-        val USER_KEY = "USER_KEY"
     }
 
     private fun listUsers() {

@@ -81,6 +81,14 @@ class ChatLogActivity : AppCompatActivity() {
             val message = Message(ref.key!!, text, fromId, toId, System.currentTimeMillis() / 1000)
             ref.setValue(message)
             refTo.setValue(message)
+
+            // guarda a ultima mensagem de quem está enviando
+            val refLatestMessage = FirebaseDatabase.getInstance().getReference("/latest_messages/$fromId/$toId")
+            refLatestMessage.setValue(message)
+
+            // guarda a ultima mensagem de quem está recebendo
+            val refLatestToMessage = FirebaseDatabase.getInstance().getReference("/latest_messages/$toId/$fromId")
+            refLatestToMessage.setValue(message)
         }
 
         clear()
