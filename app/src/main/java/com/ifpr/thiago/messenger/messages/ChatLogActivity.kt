@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -57,6 +58,8 @@ class ChatLogActivity : AppCompatActivity() {
                         adapter.add(ChatFromItem(message = message.text, user = toUser!!))
                     }
                 }
+
+                recycler_chat.scrollToPosition(adapter.itemCount -1)
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {}
@@ -94,7 +97,10 @@ class ChatLogActivity : AppCompatActivity() {
         clear()
     }
 
-    private fun clear() { edit_chat.text.clear() }
+    private fun clear() {
+        edit_chat.text.clear()
+        recycler_chat.scrollToPosition(adapter.getItemCount() - 1)
+    }
 }
 
 class ChatFromItem(val message: String, val user: User): Item<ViewHolder>() {

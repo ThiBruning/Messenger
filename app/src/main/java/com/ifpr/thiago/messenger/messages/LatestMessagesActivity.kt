@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ifpr.thiago.messenger.R
@@ -13,10 +14,8 @@ import com.ifpr.thiago.messenger.models.Message
 import com.ifpr.thiago.messenger.models.User
 import com.ifpr.thiago.messenger.registration.RegisterActivity
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_latest_messages.*
-import kotlinx.android.synthetic.main.latest_message_item.view.*
 
 val adapter = GroupAdapter<ViewHolder>()
 val latestMessagesMap = HashMap<String, Message>()
@@ -32,6 +31,16 @@ class LatestMessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_latest_messages)
 
         recycler_latest_messages.adapter = adapter
+        recycler_latest_messages.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        adapter.setOnItemClickListener { item, view ->
+            // olha para cada adapter clicado como um LatestMessageItem
+            val row = item as LatestMessageItem
+
+            val intent = Intent(this, ChatLogActivity::class.java)
+            intent.putExtra(NewMessageActivity.USER_KEY, row.userPartner)
+            startActivity(intent)
+        }
 
         // captura o usuario que esta logado
         getCurrentUser()
@@ -81,13 +90,12 @@ class LatestMessagesActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         })
 
@@ -120,15 +128,5 @@ class LatestMessagesActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-}
-
-class LatestMessageItem(val message: Message): Item<ViewHolder>() {
-    override fun getLayout(): Int {
-        return R.layout.latest_message_item
-    }
-
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.itemView.message_latest_message.text = message.text
     }
 }
