@@ -42,7 +42,9 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun listMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/messages")
+        val fromId = FirebaseAuth.getInstance().uid
+        val toId = toUser?.uid
+        val ref = FirebaseDatabase.getInstance().getReference("user-messages/$fromId/$toId")
         // para cada mensagem que ele listar...
         ref.addChildEventListener(object : ChildEventListener  {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -70,13 +72,21 @@ class ChatLogActivity : AppCompatActivity() {
         val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
         val toId = user.uid
 
-        val ref = FirebaseDatabase.getInstance().getReference("/messages").push()
+//        val ref = FirebaseDatabase.getInstance().getReference("/messages").push()
+        val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val refTo = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+
         if (fromId == null) return
         if (ref != null) {
             val message = Message(ref.key!!, text, fromId, toId, System.currentTimeMillis() / 1000)
-            ref.setValue(message).addOnSuccessListener { Toast.makeText(this, ref.key, Toast.LENGTH_LONG).show() }
+            ref.setValue(message)
+            refTo.setValue(message)
         }
+
+        clear()
     }
+
+    private fun clear() { edit_chat.text.clear() }
 }
 
 class ChatFromItem(val message: String, val user: User): Item<ViewHolder>() {

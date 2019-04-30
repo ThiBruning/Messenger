@@ -47,7 +47,7 @@ class LoginActivity: AppCompatActivity() {
             }
 
             .addOnFailureListener{
-                Toast.makeText(this, "${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "E-mail or Password is not correct", Toast.LENGTH_SHORT).show()
                 return@addOnFailureListener
             }
     }

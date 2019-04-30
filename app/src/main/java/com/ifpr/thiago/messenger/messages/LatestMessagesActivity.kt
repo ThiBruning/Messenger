@@ -31,15 +31,6 @@ class LatestMessagesActivity : AppCompatActivity() {
         verifyUserLogged()
     }
 
-    private fun verifyUserLogged() {
-        val uid = FirebaseAuth.getInstance().uid
-        if(uid == null) {
-            val intent =  Intent(this, RegisterActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-    }
-
     private fun getCurrentUser() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
@@ -53,13 +44,22 @@ class LatestMessagesActivity : AppCompatActivity() {
         })
     }
 
+    private fun verifyUserLogged() {
+        val uid = FirebaseAuth.getInstance().uid
+        if(uid == null) {
+            val intent =  Intent(this, RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+    }
+
     // criando a navbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    //quando clicar nos botoes
+    //quando clicar nos botoes da navbar
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.new_message -> {
